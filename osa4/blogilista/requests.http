@@ -4,16 +4,39 @@ GET http://localhost:3003/api/blogs
 
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2MDRiMzk0YzdiNDBjNDEzMTgxZmU2YzUiLCJpYXQiOjE2MTU1NTY4MzYsImV4cCI6MTYxNTU2MDQzNn0.5pZngR8a0UWOvBt7riNW-9h439L8TisrU5i5bFY5aBw
 
 {
-    "title": "Test blog",
-    "author": "Test blogger",
-    "url": "https://testblog.io",
-    "likes": "12"
+    "title": "Luukkainen next level user middleware rants",
+    "author": "Matti Luukkainen",
+    "url": "https://mazarants.io",
+    "likes": "49"
 }
 
 ###
 
-DELETE http://localhost:3003/api/
+DELETE http://localhost:3003/api/blogs/604b710631f70c5f1039ce49
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2MDRiMzk0YzdiNDBjNDEzMTgxZmU2YzUiLCJpYXQiOjE2MTU1NTY4MzYsImV4cCI6MTYxNTU2MDQzNn0.5pZngR8a0UWOvBt7riNW-9h439L8TisrU5i5bFY5aBw
+
+###
+
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "mluukkai",
+    "password": "matti123",
+    "name": "Matti Luukkainen"
+}
+
+###
+
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "mluukkai",
+    "password": "matti123"
+}
 
 ###
