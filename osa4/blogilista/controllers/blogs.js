@@ -1,4 +1,5 @@
 const blogsRouter = require('express').Router()
+const middleware = require('../utils/middleware')
 const Blog = require('../models/blog')
 
 blogsRouter.get('/', async (request, response) => {
@@ -8,7 +9,7 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs.map(blog => blog.toJSON()))
 })
 
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   const body = request.body
 
   if (body.title === undefined || body.url === undefined) {
@@ -32,11 +33,15 @@ blogsRouter.post('/', async (request, response) => {
   response.json(savedBlog.toJSON())
 })
 
-blogsRouter.delete('/:id', async (request, response, next) => {
+blogsRouter.delete('/:id', middleware.userExtractor, async (request, response, next) => {
   const user = request.user
   const blog = await Blog.findById(request.params.id)
 
-  if (blog.user._id !== user.id.toString()) {
+  if (blog === null) {
+    return response.status(403).json({ error: 'blog with given id not found' })
+  }
+
+  if (blog.user.toString() !== user.id.toString()) {
     return response.status(403).json({ error: 'cannot remove blog inserted by other user' })
   }
 
