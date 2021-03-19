@@ -6,7 +6,16 @@ const Blog = ({ blog, likeBlog, user, removeBlog }) => {
 
   const expansionStyle = { display: expanded ? '' : 'none' }
   const buttonText = expanded ? 'hide' : 'view'
-  const removeButtonStyle = { display: user.username === blog.user.username ? '' : 'none' }
+
+  const addedByCurrentUser = () => (
+    user !== undefined
+    && user.username !== undefined
+    && blog.user !== undefined
+    && blog.user.username !== undefined
+    && user.username === blog.user.username
+  )
+
+  const removeButtonStyle = { display: addedByCurrentUser() ? '' : 'none' }
 
   const blogStyle = {
     paddingTop: 10,
@@ -38,12 +47,12 @@ const Blog = ({ blog, likeBlog, user, removeBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       <div>
         {blog.title} {blog.author}
         <button onClick={() => setExpanded(!expanded)}>{buttonText}</button>
       </div>
-      <div style={expansionStyle}>
+      <div style={expansionStyle} className='expandableContent'>
         {blog.url}<br />
         likes {blog.likes}
         <button onClick={addLike}>like</button><br />
