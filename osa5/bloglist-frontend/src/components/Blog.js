@@ -55,7 +55,7 @@ const Blog = ({ blog, likeBlog, user, removeBlog }) => {
       <div style={expansionStyle} className='expandableContent'>
         {blog.url}<br />
         likes {blog.likes}
-        <button onClick={addLike}>like</button><br />
+        <button id='like' onClick={addLike}>like</button><br />
         {blog.user.name}<br />
         <div style={removeButtonStyle}>
           <button onClick={deleteBlog}>remove</button>

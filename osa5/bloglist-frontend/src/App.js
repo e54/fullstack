@@ -154,7 +154,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={notification} />
       <p>{user.name} logged in
-        <button id='newblog' onClick={logout}>
+        <button onClick={logout}>
           logout
         </button>
       </p>
