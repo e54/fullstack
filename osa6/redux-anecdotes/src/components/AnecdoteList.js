@@ -1,23 +1,33 @@
 import React from 'react'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
-import { setNotification, clearNotification} from '../reducers/notificationReducer';
+import { setNotification} from '../reducers/notificationReducer';
 import {useDispatch, useSelector} from 'react-redux'
+import ConnectedNotification from "./Notification";
+import ConnectedFilter from "./Filter";
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector(state => state.anecdotes
-    .filter(a => a.content.toLowerCase().includes(state.filter.toLowerCase())))
+  const anecdotes = useSelector(state => {
+    if (state.filter) {
+      return state.anecdotes.filter(a => a.content.toLowerCase()
+          .includes(state.filter.toLowerCase()))
+    }
+    return state.anecdotes
+  })
+
   const dispatch = useDispatch()
 
-  const vote = ({ id, content }) => {
-    console.log('vote', id, content)
-    dispatch(voteAnecdote(id))
-    dispatch(setNotification(`you voted ${content}`))
-    setTimeout(() => dispatch(clearNotification()), 5000)
+  const vote = (anecdote) => {
+    console.log('vote for', anecdote)
+    dispatch(voteAnecdote(anecdote))
+    dispatch(setNotification(`you voted '${anecdote.content}'`, 5))
   }
 
   return (
     <div>
-    {anecdotes.map(anecdote =>
+      <h2>Anecdotes</h2>
+      <ConnectedNotification />
+      <ConnectedFilter />
+      {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}

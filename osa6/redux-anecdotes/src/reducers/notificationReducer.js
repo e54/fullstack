@@ -1,26 +1,35 @@
-const initialState = ''
+import * as timers from "timers";
 
-const notificationReducer = (state = initialState, action) => {
+const notificationReducer = (state = '', action) => {
   switch (action.type) {
-    case 'SET':
+    case 'SET NOTIFICATION':
       return action.content
-    case 'CLEAR':
+    case 'CLEAR NOTIFICATION':
       return ''
     default:
       return state
   }
 }
 
-export const setNotification = (content) => {
-  return {
-    type: 'SET',
-    content: content
-  }
-}
+let existingTimeoutId
 
-export const clearNotification = () => {
-  return {
-    type: 'CLEAR'
+export const setNotification = (content, seconds) => {
+  return async dispatch => {
+    console.log('timeoutid',existingTimeoutId)
+    if (existingTimeoutId) {
+      clearTimeout(existingTimeoutId)
+      existingTimeoutId = null
+    }
+    dispatch({
+      type: 'SET NOTIFICATION',
+      content: content
+    })
+    existingTimeoutId = await setTimeout(() => {
+      dispatch({
+        type: 'CLEAR NOTIFICATION'
+      })
+      existingTimeoutId = null
+    }, seconds * 1000)
   }
 }
 

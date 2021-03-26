@@ -1,9 +1,7 @@
-const initialState = ''
-
-const filterReducer = (state = initialState, action) => {
+const filterReducer = (state = '', action) => {
   switch (action.type) {
-    case 'SET':
-      return action.content
+    case 'SET FILTER':
+      return action.text
     default:
       return state
   }
@@ -11,8 +9,8 @@ const filterReducer = (state = initialState, action) => {
 
 export const setFilter = (content) => {
   return {
-    type: 'SET',
-    content: content
+    type: 'SET FILTER',
+    text: content
   }
 }
 
