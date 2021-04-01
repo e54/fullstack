@@ -1,0 +1,75 @@
+GET http://localhost:3001/info
+
+###
+
+GET http://localhost:3001/api/persons
+
+###
+
+GET http://localhost:3001/api/persons/6038ef5597061646a4a34c1f
+
+###
+
+GET http://localhost:3001/api/persons/malformattedId
+
+###
+
+GET http://localhost:3001/api/unknownEndpoint
+
+###
+
+DELETE http://localhost:3001/api/persons/3
+
+###
+
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Test Person",
+    "number": "023-123123"
+}
+
+###
+
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Test Person",
+    "number": ""
+}
+
+###
+
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "",
+    "number": "023-123123"
+}
+
+###
+
+DELETE https://vast-atoll-45849.herokuapp.com/api/persons/3
+
+###
+
+POST https://vast-atoll-45849.herokuapp.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "Test Person",
+    "number": "023-123123"
+}
+
+###
+
+POST https://vast-atoll-45849.herokuapp.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "",
+    "number": "023-123123"
+}
