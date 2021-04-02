@@ -1,6 +1,6 @@
 import React from 'react'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
-import { setNotification} from '../reducers/notificationReducer';
+import { setNotification} from '../reducers/notificationReducer'
 import {useDispatch, useSelector} from 'react-redux'
 import ConnectedNotification from "./Notification";
 import ConnectedFilter from "./Filter";
