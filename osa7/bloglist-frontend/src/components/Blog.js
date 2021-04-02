@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { Button, Card } from 'react-bootstrap'
 
 const Blog = ({ blog, likeBlog, user, removeBlog }) => {
   const [ expanded, setExpanded ] = useState(false)
@@ -16,14 +17,6 @@ const Blog = ({ blog, likeBlog, user, removeBlog }) => {
   )
 
   const removeButtonStyle = { display: addedByCurrentUser() ? '' : 'none' }
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
 
   const addLike = (event) => {
     event.preventDefault()
@@ -47,21 +40,21 @@ const Blog = ({ blog, likeBlog, user, removeBlog }) => {
   }
 
   return (
-    <div style={blogStyle} className='blog'>
-      <div>
-        {blog.title} {blog.author}
-        <button onClick={() => setExpanded(!expanded)}>{buttonText}</button>
-      </div>
-      <div style={expansionStyle} className='expandableContent'>
-        {blog.url}<br />
-        likes {blog.likes}
-        <button id='like' onClick={addLike}>like</button><br />
-        {blog.user.name}<br />
-        <div style={removeButtonStyle}>
-          <button onClick={deleteBlog}>remove</button>
+    <Card className='blog'>
+      <Card.Header>{blog.title} by {blog.author}</Card.Header>
+      <Card.Body>
+        <div style={expansionStyle} className='expandableContent'>
+          {blog.url}<br />
+          likes {blog.likes}
+          <Button variant='success' id='like' onClick={addLike}>like</Button><br />
+          {blog.user.name}<br />
+          <div style={removeButtonStyle}>
+            <Button variant='danger' onClick={deleteBlog}>remove</Button>
+          </div>
         </div>
-      </div>
-    </div>
+        <Button variant='primary' onClick={() => setExpanded(!expanded)}>{buttonText}</Button>
+      </Card.Body>
+    </Card>
   )
 }
 

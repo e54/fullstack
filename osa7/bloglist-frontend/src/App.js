@@ -6,12 +6,13 @@ import Togglable from './components/Togglable'
 import CreateBlogForm from './components/CreateBlogForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, addBlog, likeBlog } from './reducers/blogReducer'
+import { initializeBlogs, addBlog, likeBlog, removeBlog } from './reducers/blogReducer'
+import { setUser, clearUser } from './reducers/userReducer'
+import { Form, Button, Alert } from 'react-bootstrap'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const [ isError, setIsError ] = useState(false)
 
   const dispatch = useDispatch()
@@ -22,13 +23,14 @@ const App = () => {
     dispatch(initializeBlogs())
   },[dispatch])
 
+  const user = useSelector(state => state.user)
   const blogs = useSelector(state => state.blogs)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setUser(user))
       blogService.setToken(user.token)
     }
   }, [])
@@ -45,7 +47,7 @@ const App = () => {
         'loggedBlogAppUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user))
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -55,6 +57,7 @@ const App = () => {
 
   const logout = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
+    dispatch(clearUser())
     window.location.reload()
   }
 
@@ -75,8 +78,8 @@ const App = () => {
     await dispatch(likeBlog(updatedBlogObject))
   }
 
-  const removeBlog = async (id) => {
-    await blogService.remove(id)
+  const removeExistingBlog = async (id) => {
+    await dispatch(removeBlog(id))
   }
 
   const Notification = () => {
@@ -85,24 +88,12 @@ const App = () => {
       return null
     }
 
-    return (
-      <div
-        className={isError ? 'error' : 'notification'}
-        style={notificationStyle}
-      >
-        {notification}
-      </div>
-    )
-  }
+    const alertClassType = isError ? 'danger' : 'success'
+    const alertClass = `alert alert-${alertClassType}`
 
-  const notificationStyle = {
-    color: isError ? 'red' : 'green',
-    background: 'lightgrey',
-    fontSize: 20,
-    borderStyle: 'solid',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10
+    return (
+      <Alert class={alertClass}>{notification}</Alert>
+    )
   }
 
   const showNotification = (text, showAsError) => {
@@ -112,52 +103,51 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
+      <div className="container">
         <h2>Log in to application</h2>
         <Notification />
-        <form onSubmit={handleLogin}>
-          <div>
-          username
-            <input
+        <Form onSubmit={handleLogin}>
+          <Form.Group>
+            <Form.Label>username</Form.Label>
+            <Form.Control
               id='username'
               type="text"
               value={username}
               name="Username"
-              onChange={({ target }) => setUsername(target.value)}/>
-          </div>
-          <div>
-          password
-            <input
+              onChange={({ target }) => setUsername(target.value)}
+              />
+            <Form.Label>password</Form.Label>
+            <Form.Control
               id='password'
               type="password"
               value={password}
               name="Password"
-              onChange={({ target }) => setPassword(target.value)}/>
-          </div>
-          <button id='login' type="submit">login</button>
-        </form>
+              onChange={({ target }) => setPassword(target.value)}
+          />
+          <Button variant='primary' id='login' type="submit">login</Button>
+          </Form.Group>
+        </Form>
       </div>
     )
   }
 
   return (
-    <div>
+    <div className="container">
       <h2>blogs</h2>
       <Notification />
       <p>{user.name} logged in
-        <button onClick={logout}>
+        <Button variant='warning' onClick={logout}>
           logout
-        </button>
+        </Button>
       </p>
       {createBlogForm()}
-      {console.log('blogs:',blogs)}
       {blogs.map(blog =>
         <Blog
           key={blog.id}
           blog={blog}
           likeBlog={addLikeToBlog}
           user={user}
-          removeBlog = {removeBlog}
+          removeBlog = {removeExistingBlog}
         />
       ).sort((a, b) => b.props.blog.likes - a.props.blog.likes)}
     </div>
